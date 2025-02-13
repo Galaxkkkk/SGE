@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+import hashlib
 
 DATABASE = "estoque.db"
 
@@ -27,6 +28,13 @@ def criar_tabela():
         data TEXT NOT NULL,
         FOREIGN KEY (produto_id) REFERENCES produtos (id)
       )      
+    ''')
+    cursor.execute('''
+      CREATE TABLE IF NOT EXISTS  usuarios(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        senha_hash TEXT NOT NULL            
+      )
     ''')
     conn.commit()
 
@@ -108,6 +116,47 @@ def listar_estoque_baixo():
     for produto in produtos:
       print(f"ID: {produto[0]}, Nome: {produto[1]}, Estoque: {produto[4]}")
 
+def hash_senha(senha):
+  return hashlib.sha256(senha.encode()).hexdigest()
+
+def cadastrar_usuario():
+  username = input("Escolha seu nome de Usuário: ")
+  senha = input("Escolha uma senha: ")
+  senha_hash = hash_senha(senha)
+
+  with sqlite3.connect(DATABASE) as conn:
+    cursor = conn.cursor()
+    try:
+      cursor.execute('''
+        INSERT INTO usuarios (username, senha_hash)
+        VALUES (?, ?)
+      ''', (username, senha_hash))
+      conn.commit()
+      print("Usuário cadastrado com sucesso!")
+    except sqlite3.IntegrityError:
+      print("Erro: Nome de usuário já existe.")
+
+def fazer_login():
+  username = input("Nome de Usário: ")
+  senha = input("Senha: ")
+  senha_hash = hash_senha(senha)
+
+  with sqlite3.connect(DATABASE) as conn:
+    cursor = conn.cursor()
+    cursor.execute('''
+      SELECT id FROM usuarios
+      WHERE username = ? AND senha_hash = ?
+    ''', (username, senha_hash))
+    usuario = cursor.fetchone()
+
+    if usuario:
+      print("Login Bem-sucedido!")
+      return usuario[0]
+    
+    else:
+      print("Usuário ou senha incorretos.")
+      return None
+
 def menu():
   print("\n--- Sistema de Gestão de Estoque ---")
   print("1. Adicionar Produto")
@@ -117,7 +166,7 @@ def menu():
   print("5. Sair")
   return input("Escolha uma opção: ")
 
-def main():
+def menu_principal(usuario_id):
   criar_tabela()
   
   while True:
@@ -138,5 +187,29 @@ def main():
     else:
       print("Opção inválida. Tente Novamente.")
       
+def menu_autenticacao():
+  while True:
+    print("\n--- Autenticação ---")
+    print("1. Fazer Login")
+    print("2. Cadastrar Usuário")
+    print("3. Sair")
+    opcao = input("Escolha uma opção: ")
+  
+    if opcao == "1":
+      usuario_id = fazer_login()
+      if usuario_id:
+        menu_principal(usuario_id)
+    elif opcao == "2":
+      cadastrar_usuario()
+    elif opcao == "3":
+      print("Até Logo!")
+      break
+    else:
+      print("Opção inválida. Tente novamente.")
+  
+def main():
+  criar_tabela()
+  menu_autenticacao()
+
 if __name__ == "__main__":
   main()
