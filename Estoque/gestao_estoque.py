@@ -116,6 +116,43 @@ def listar_estoque_baixo():
     print("\nProdutos com estoque baixo: ")
     for produto in produtos:
       print(f"ID: {produto[0]}, Nome: {produto[1]}, Estoque: {produto[4]}")
+      
+def modificar_preco():
+  listar_produtos()
+  produto_id = int(input("Digite o ID do produto que deseja modificar: "))
+  
+  with sqlite3.connect(DATABASE) as conn:
+    cursor = conn.cursor()
+    cursor.execute("SELECT nome, preco FROM produtos WHERE id = ?", (produto_id,))
+    produto = cursor.fetchone()
+    
+    if not produto:
+      print("Produto não encontrado.")
+      return
+    
+    nome, preco_atual = produto
+    print(f"Preço atual de '{nome}': R${preco_atual:.2f}")
+  
+  while True:
+    try:
+        novo_preco = float(input("Digite o novo preço: "))
+        if novo_preco <=0:
+          print("O preço deve ser positivo. Tente Novamente.")
+        else:
+          break
+    except ValueError:
+      print("Preço inválido. Digite um Número.")
+  
+  with sqlite3.connect(DATABASE) as conn:
+    cursor = conn.cursor()
+    cursor.execute('''
+      UPDATE produtos
+      SET preco = ?
+      WHERE id = ?               
+    ''', (novo_preco, produto_id))
+    conn.commit()
+    
+  print(f"Preço de '{nome}' atualizado para R${novo_preco:.2f}.")
 
 def hash_senha(senha):
   return hashlib.sha256(senha.encode()).hexdigest()
@@ -171,9 +208,10 @@ def menu_principal(usuario_id):
     if role in ['admin', 'gerente']:
       print("2. Adicionar Produto")
       print("3. Registrar Movimentação")
+      print("4. Modificar Preço do Produto")
     if role == ['admin']:
-      print("4. Cadastrar Usuário")
-    print("5. Sair")
+      print("5. Cadastrar Usuário")
+    print("6. Sair")
     opcao = input("Escolha uma opção: ")
     
     if opcao == "1":
@@ -182,9 +220,11 @@ def menu_principal(usuario_id):
       adicionar_produto()
     elif opcao == "3" and role in ['admin', 'gerente']:
       registrar_movimentacao()
-    elif opcao == "4" and role in ['admin']:
+    elif opcao == "4" and role in ['admin', 'gerente']:
+      modificar_preco()
+    elif opcao == "5" and role in ['admin']:
       cadastrar_usuario()
-    elif opcao == "5":
+    elif opcao == "6":
       print("Até Logo!")
       break
     else:
