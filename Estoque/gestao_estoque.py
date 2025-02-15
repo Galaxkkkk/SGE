@@ -33,7 +33,8 @@ def criar_tabela():
       CREATE TABLE IF NOT EXISTS  usuarios(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
-        senha_hash TEXT NOT NULL            
+        senha_hash TEXT NOT NULL,
+        role TEXT NOT NULL -- 'admin', 'gerente', 'funcionario'       
       )
     ''')
     conn.commit()
@@ -122,15 +123,16 @@ def hash_senha(senha):
 def cadastrar_usuario():
   username = input("Escolha seu nome de Usuário: ")
   senha = input("Escolha uma senha: ")
+  role = input("Escolha o nível de acesso (admin/gerente/funcionario): ").lower()
   senha_hash = hash_senha(senha)
 
   with sqlite3.connect(DATABASE) as conn:
     cursor = conn.cursor()
     try:
       cursor.execute('''
-        INSERT INTO usuarios (username, senha_hash)
-        VALUES (?, ?)
-      ''', (username, senha_hash))
+        INSERT INTO usuarios (username, senha_hash, role)
+        VALUES (?, ?, ?)
+      ''', (username, senha_hash, role))
       conn.commit()
       print("Usuário cadastrado com sucesso!")
     except sqlite3.IntegrityError:
@@ -157,35 +159,37 @@ def fazer_login():
       print("Usuário ou senha incorretos.")
       return None
 
-def menu():
-  print("\n--- Sistema de Gestão de Estoque ---")
-  print("1. Adicionar Produto")
-  print("2. Listar Produtos")
-  print("3. Registrar Movimentação")
-  print("4. Listar Estoque Baixo")
-  print("5. Sair")
-  return input("Escolha uma opção: ")
-
 def menu_principal(usuario_id):
-  criar_tabela()
+  with sqlite3.connect(DATABASE) as conn:
+    cursor = conn.cursor()
+    cursor.execute("SELECT role FROM usuarios WHERE id = ?", (usuario_id,))
+    role = cursor.fetchone()[0]
   
   while True:
-    opcao = menu()
+    print("\n--- Sistema de Gestão de Estoque ---")
+    print("1. Listar Produtos")
+    if role in ['admin', 'gerente']:
+      print("2. Adicionar Produto")
+      print("3. Registrar Movimentação")
+    if role == ['admin']:
+      print("4. Cadastrar Usuário")
+    print("5. Sair")
+    opcao = input("Escolha uma opção: ")
     
     if opcao == "1":
-      adicionar_produto()
-    elif opcao == "2":
       listar_produtos()
-    elif opcao == "3":
+    elif opcao == "2" and role in ['admin', 'gerente']:
+      adicionar_produto()
+    elif opcao == "3" and role in ['admin', 'gerente']:
       registrar_movimentacao()
-    elif opcao == "4":
-      listar_estoque_baixo()
+    elif opcao == "4" and role in ['admin']:
+      cadastrar_usuario()
     elif opcao == "5":
-      print("Até logo!")
+      print("Até Logo!")
       break
-    
     else:
-      print("Opção inválida. Tente Novamente.")
+      print("Opção inválida ou não permitida para seu nível de acesso.")
+  
       
 def menu_autenticacao():
   while True:
