@@ -154,6 +154,26 @@ def modificar_preco():
     
   print(f"Preço de '{nome}' atualizado para R${novo_preco:.2f}.")
 
+def buscar_produtos():
+  termo = input("Digite o nome ou descrição do produto que deseja buscar: ")
+
+  with sqlite3.connect(DATABASE) as conn:
+    cursor = conn.cursor()
+    cursor.execute('''
+      SELECT * FROM produtos
+      WHERE nome LIKE ? OR descricao LIKE ?
+    ''', (f'%{termo}%', f'%{termo}%'))
+    produtos = cursor.fetchall()
+
+    if not produtos:
+      print("Nenhum produto encontrado.")
+      return
+
+
+    print("\Resultados da busca: ")
+    for produto in produtos:
+      print(f"ID: {produto[0]}, Nome: {produto[1]}, Descrição: {produto[2]}, Preço: R${produto[3]:.2f}, Estoque: {produto[4]}")
+
 def hash_senha(senha):
   return hashlib.sha256(senha.encode()).hexdigest()
 
@@ -205,26 +225,29 @@ def menu_principal(usuario_id):
   while True:
     print("\n--- Sistema de Gestão de Estoque ---")
     print("1. Listar Produtos")
+    print("2. Buscar Produtos")
     if role in ['admin', 'gerente']:
-      print("2. Adicionar Produto")
-      print("3. Registrar Movimentação")
-      print("4. Modificar Preço do Produto")
+      print("3. Adicionar Produto")
+      print("4. Registrar Movimentação")
+      print("5. Modificar Preço do Produto")
     if role == ['admin']:
-      print("5. Cadastrar Usuário")
-    print("6. Sair")
+      print("6. Cadastrar Usuário")
+    print("7. Sair")
     opcao = input("Escolha uma opção: ")
     
     if opcao == "1":
       listar_produtos()
-    elif opcao == "2" and role in ['admin', 'gerente']:
-      adicionar_produto()
+    elif opcao == "2":
+      buscar_produtos()
     elif opcao == "3" and role in ['admin', 'gerente']:
-      registrar_movimentacao()
+      adicionar_produto()
     elif opcao == "4" and role in ['admin', 'gerente']:
+      registrar_movimentacao()
+    elif opcao == "5" and role in ['admin', 'gerente']:
       modificar_preco()
-    elif opcao == "5" and role in ['admin']:
+    elif opcao == "6" and role in ['admin']:
       cadastrar_usuario()
-    elif opcao == "6":
+    elif opcao == "7":
       print("Até Logo!")
       break
     else:
