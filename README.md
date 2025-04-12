@@ -43,7 +43,7 @@ Sistema completo de gerenciamento de estoque desenvolvido em Python utilizando:
 
 ## ⚙️ Configuração do Ambiente
 
-1. git clone https://github.com/seu-usuario/estoque-system.git
+1. git clone https://github.com/galaxkkkk/estoque-system.git
 2. cd estoque-system
 3. pip install -r requirements.txt
 4. python app.py
