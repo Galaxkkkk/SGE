@@ -1,88 +1,74 @@
-Sistema de Gerenciamento de Estoque
-Python
-CustomTkinter
-SQLite
+# Sistema de Gerenciamento de Estoque com Python
 
-Um sistema completo de gerenciamento de estoque desenvolvido em Python com interface gráfica moderna usando CustomTkinter e banco de dados SQLite.
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![CustomTkinter](https://img.shields.io/badge/CustomTkinter-5.2.1+-green.svg)
+![SQLite](https://img.shields.io/badge/SQLite-3-lightgrey.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-📌 Funcionalidades
-🔐 Sistema de Login seguro com usuários pré-cadastrados
+## 📝 Descrição
 
-📦 CRUD completo de produtos (Criar, Ler, Atualizar, Deletar)
+Sistema completo de gerenciamento de estoque desenvolvido em Python utilizando:
+- **CustomTkinter** para interface gráfica moderna
+- **SQLite** para armazenamento de dados
+- Arquitetura **MVC** (Model-View-Controller)
+- Padrão **CRUD** para operações básicas
 
-📊 Relatórios de itens com estoque baixo
+## ✨ Funcionalidades Principais
 
-🛒 Produtos pré-cadastrados (20 itens de mercado)
+### 🔐 Autenticação de Usuários
+- Sistema de login seguro
+- Usuário admin padrão (admin/admin123)
+- Níveis de acesso (administrador/comum)
 
-💻 Interface moderna com tema escuro
+### 📦 Gestão de Produtos
+- Cadastro de novos itens
+- Visualização em tabela organizada
+- Edição completa de produtos
+- Exclusão de itens do estoque
+- 20 produtos de mercado pré-cadastrados
 
-🚀 Como Executar
-Pré-requisitos:
+### 📊 Relatórios Inteligentes
+- Identificação automática de itens com estoque baixo
+- Destaque visual para produtos abaixo do nível mínimo
+- Cálculo da quantidade faltante
 
-Python 3.8+
+## 🛠️ Tecnologias Utilizadas
 
-Git (opcional)
+| Tecnologia | Finalidade | Versão |
+|------------|------------|--------|
+| Python | Linguagem principal | 3.8+ |
+| CustomTkinter | Interface gráfica | ≥5.2.1 |
+| SQLite | Banco de dados | 3 |
+| Pillow | Manipulação de imagens | ≥10.0.0 |
 
-Instalação:
+## ⚙️ Configuração do Ambiente
 
-bash
-Copy
 git clone https://github.com/seu-usuario/estoque-system.git
 cd estoque-system
 pip install -r requirements.txt
-Execução:
-
-bash
-Copy
 python app.py
-Login inicial:
 
-Usuário: admin
+## 🤝 Como Contribuir
 
-Senha: admin123
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/awesome-feature`)
+3. Commit suas alterações (`git commit -m 'Add awesome feature'`)
+4. Push para a branch (`git push origin feature/awesome-feature`)
+5. Abra um Pull Request
 
-🛠️ Tecnologias Utilizadas
-Python - Linguagem principal
+## 📄 Licença
 
-CustomTkinter - Interface gráfica moderna
+Distribuído sob licença MIT. Veja `LICENSE` para mais informações.
 
-SQLite - Banco de dados embutido
+## ✉️ Contato
 
-MVC - Arquitetura Model-View-Controller
+Desenvolvido por [Victoria Peixoto de OLiveira](https://github.com/galaxkkkk)  
+Email: seu-email@exemplo.com
 
-📂 Estrutura do Projeto
-Copy
-estoque-system/
-├── controllers/       # Lógica de controle
-├── models/            # Modelos e banco de dados
-├── views/             # Interface do usuário
-├── static/            # Recursos estáticos
-├── app.py             # Ponto de entrada
-└── README.md          # Este arquivo
-📸 Screenshots
-Tela de Login
-Tela de Login
+---
 
-Lista de Produtos
-Lista de Produtos
+**Nota**: Para utilizar o sistema, execute `python app.py` e faça login com:
+- Usuário: `admin`
+- Senha: `admin123`
 
-Relatórios
-Relatórios de Estoque
-
-🤝 Contribuição
-Contribuições são bem-vindas! Siga os passos:
-
-Faça um fork do projeto
-
-Crie uma branch (git checkout -b feature/nova-feature)
-
-Commit suas mudanças (git commit -m 'Adiciona nova feature')
-
-Push para a branch (git push origin feature/nova-feature)
-
-Abra um Pull Request
-
-📄 Licença
-Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
-
-Desenvolvido com ❤️ por Seu Nome
+**Dica**: Os produtos pré-cadastrados incluem itens como arroz, feijão, óleo, leite e outros produtos básicos de mercado, com quantidades e preços realistas.
