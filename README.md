@@ -63,7 +63,7 @@ Distribuído sob licença MIT. Veja `LICENSE` para mais informações.
 ## ✉️ Contato
 
 Desenvolvido por [Victoria Peixoto de OLiveira](https://github.com/galaxkkkk)  
-Email: seu-email@exemplo.com
+Email: galaxy.o.peixoto09@gmail.com
 
 ---
 
